@@ -1,4 +1,6 @@
 //imports
+import utils.Cleaning;
+import utils.press_enter;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -6,6 +8,10 @@ public class Main {
     public static void main(String[] args) {
         //calling the scanner
         Scanner scan = new Scanner(System.in);
+
+        //calling other classes
+        Cleaning screen = new Cleaning();
+        press_enter enter = new press_enter();
 
         while(true){
             //checking if the input is an integer
@@ -22,17 +28,54 @@ public class Main {
                 //checking what choice the user slected
                 switch (choice){
                     case 1:
+                        //asking the player what game they want to play OR if they want to exit
+                        System.out.println("1. Blackjack\n" +
+                                "2. Roulette\n" +
+                                "3. Slots\n" +
+                                "4. War\n" +
+                                "5. Poker\n" +
+                                "6. Exit");
+                        choice = scan.nextInt();
+
+                        //checking the choice of the player
+                        switch (choice){
+                            case 1:
+                                System.out.println("play blackjack");
+                                break;
+                            case 2:
+                                System.out.println("Play roulette");
+                                break;
+                            case 3:
+                                System.out.println("play slots");
+                                break;
+                            case 4:
+                                System.out.println("playing war");
+                                break;
+                            case 5:
+                                System.out.println("playing poker");
+                                break;
+                            case 6:
+                                System.exit(0);
+                            default:
+                                System.out.println("Please enter a valid number that is in the menu");
+                                break;
+                        }
                         break;
                     case 2:
                         System.exit(0);
                     default:
                         System.out.println("Please enter a valid number that is in the menu");
+                        break;
                 }
+                enter.press();
+                screen.clean();
             }
             //if there is another error that occurred
             catch (InputMismatchException e){
                 System.out.println("Please enter a valid number");
-                String empty = scan.next();
+                enter.press();
+                screen.clean();
+                scan.next();
             }
             catch (Exception e){
                 System.out.println("Error Occurred: " + e);
