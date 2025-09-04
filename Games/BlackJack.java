@@ -25,6 +25,7 @@ public class BlackJack {
             //checking if all the inputs are good
             try{
                 //asking the user what they want to do
+                System.out.println("Blackjack");
                 System.out.println("1. Play\n" +
                         "2. How to Play\n" +
                         "3. Exit");
@@ -43,7 +44,7 @@ public class BlackJack {
                         break;
                     case 3:
                         weLooping = false;
-                        scan.close();
+                        screen.clean();
                         break;
                     default:
                         System.out.println("Please enter a valid number from 1 - 3");

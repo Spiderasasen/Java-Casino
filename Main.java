@@ -1,4 +1,5 @@
 //imports
+import Games.*;
 import utils.Cleaning;
 import utils.press_enter;
 import java.util.InputMismatchException;
@@ -12,6 +13,7 @@ public class Main {
         //calling other classes
         Cleaning screen = new Cleaning();
         press_enter enter = new press_enter();
+        BlackJack blackjack = new BlackJack();
 
         while(true){
             //checking if the input is an integer
@@ -40,7 +42,8 @@ public class Main {
                         //checking the choice of the player
                         switch (choice){
                             case 1:
-                                System.out.println("play blackjack");
+                                screen.clean();
+                                blackjack.mainBlackjack();
                                 break;
                             case 2:
                                 System.out.println("Play roulette");
@@ -62,12 +65,13 @@ public class Main {
                         }
                         break;
                     case 2:
+                        scan.close();
                         System.exit(0);
                     default:
                         System.out.println("Please enter a valid number that is in the menu");
+                        enter.press();
                         break;
                 }
-                enter.press();
                 screen.clean();
             }
             //if there is another error that occurred
