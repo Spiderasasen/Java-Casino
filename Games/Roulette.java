@@ -3,8 +3,8 @@ package Games;
 //imports
 import Games.Util.Money;
 import utils.*;
-import java.util.Scanner;
-import java.util.InputMismatchException;
+
+import java.util.*;
 
 public class Roulette {
     //calling the scanner
@@ -71,11 +71,103 @@ public class Roulette {
 
     //calling the games section of the game
     public void game(){
-        System.out.println("hi");
+        //setting the bets of the loop
+        ArrayList<Object> bets = new ArrayList<Object>();
+        bets = place_bets();
+        System.out.println(bets);
     }
 
+    //ensures all changes are visible across all threads
+    private volatile boolean roundOver = false;
+
     //making a section where makes the user place there bets
-    private void place_bets(){
+    private ArrayList<Object> place_bets(){
+        ArrayList<Object> bets = new ArrayList<Object>();
+
         System.out.println("Place Your Bets!");
+
+        //placing the timer
+        Thread timer = new Thread(() -> {
+            try{
+                Thread.sleep(120000); //timer for 2 minutes
+
+                //when the timer is up it will make the roundOver is
+                roundOver = true;
+                System.out.println("Times Up!!!");
+            }
+            catch (InterruptedException e){
+                System.err.println("Timer was Interrupted");
+            }
+        });
+
+        //checking the round is not over
+        while (!roundOver){
+            System.out.println("3 6 9 12 15 18 21 24 27 30 33 36\n" +
+                    "2 5 8 11 14 17 20 23 26 29 32 35\n" +
+                    "1 4 7 10 13 16 19 22 25 28 31 34\n" +
+                    "         Red      Back          \n" +
+                    "             Done                 ");
+            //getting the selection
+            String betSelection = scan.nextLine();
+
+            //checking if the input is a number
+            try{
+                //if user selects a number, then it returns the number
+                if(1 <= Integer.parseInt(betSelection) && Integer.parseInt(betSelection) <= 36){
+                    bets.add(Integer.parseInt(betSelection));
+                    if(anyRepeats(bets)){
+                        System.out.println("Please enter a unique number");
+                        bets.removeLast();
+                    }
+                }
+                else{
+                    System.out.println("Please enter a valid number from 1 - 36");
+                }
+            }
+            //if not a number then it will do something else
+            catch (NumberFormatException e){
+                //if the user selected a number in red
+                if(betSelection.equalsIgnoreCase("red")){
+                    bets.add("Red");
+                    roundOver = true;
+                }
+
+                //if the user selected a number in black
+                else if(betSelection.equalsIgnoreCase("black")){
+                    bets.add("Black");
+                    roundOver = true;
+                }
+
+                //if the choise is done
+                else if(betSelection.equalsIgnoreCase("done")){roundOver = true;}
+
+                //if the choise was not one of these options then we tell the user to go again
+                else{
+                    System.out.println("Please Chose an correct item");
+                }
+            }
+
+            //adding a small sleep
+            try{
+                Thread.sleep(100);
+            }
+            catch (InterruptedException e){
+                //nothing happens
+            }
+        }
+        return bets;
+    }
+
+    //checks if the number is not repeated
+    private boolean anyRepeats(ArrayList<Object> bets){
+        Set<Object> seenElements = new HashSet<Object>();
+
+        //if the hash map has a dublicate then it will return true
+        for (Object element : bets){
+            if(!seenElements.add(element)){
+                return true;
+            }
+        }
+        return false;
     }
 }

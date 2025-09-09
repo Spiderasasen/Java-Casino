@@ -13,10 +13,6 @@ public class Test {
 //        test1.game();
 //        test2.mainGame();
         test2.game();
-        int[] differntAmount = {100, -59, -1000, 1000};
-        for (int amount : differntAmount){
-            System.out.println(moneyTest.getMoney());
-            moneyTest.setMoney(amount);
-        }
+
     }
 }
