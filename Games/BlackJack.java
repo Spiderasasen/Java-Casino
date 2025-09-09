@@ -1,7 +1,7 @@
 package Games;
 //imports
 import utils.*;
-
+import Games.Util.Money;
 import java.sql.SQLOutput;
 import java.util.Random;
 import java.util.InputMismatchException;
@@ -14,6 +14,18 @@ public class BlackJack {
     Scanner scan = new Scanner(System.in); //scanner
     press_enter enter = new press_enter(); //making the user to only press enter
     Random randomNumber = new Random();
+
+    //calling a private var that states the money
+    private int money;
+
+    //making the constructor
+    public BlackJack(Money sharedMoney){
+        this.money = sharedMoney.getMoney();
+    }
+
+    public BlackJack(){
+        money = 10000;
+    }
 
     //main void for blackjack
     public void mainBlackjack() {

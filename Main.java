@@ -1,11 +1,14 @@
 //imports
 import Games.*;
 import utils.*;
+import Games.Util.Money;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        //calling the money class
+        Money money = new Money();
         //calling the scanner
         Scanner scan = new Scanner(System.in);
 
