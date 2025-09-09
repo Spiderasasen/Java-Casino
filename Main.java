@@ -1,7 +1,6 @@
 //imports
 import Games.*;
-import utils.Cleaning;
-import utils.press_enter;
+import utils.*;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
