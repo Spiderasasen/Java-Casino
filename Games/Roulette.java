@@ -3,7 +3,6 @@ package Games;
 //imports
 import Games.Util.Money;
 import utils.*;
-
 import java.util.*;
 
 public class Roulette {
@@ -73,8 +72,9 @@ public class Roulette {
     public void game(){
         //setting the bets of the loop
         ArrayList<Object> bets = new ArrayList<Object>();
-        bets = place_bets();
-        System.out.println(bets);
+//        bets = place_bets();
+        int winning_number = rouletteWheel();
+        System.out.println("Winning Number: " + winning_number);
     }
 
     //ensures all changes are visible across all threads
@@ -169,5 +169,64 @@ public class Roulette {
             }
         }
         return false;
+    }
+
+    //setting the numbers on the roullet table
+    private int[] red = {1, 3, 5, 7, 9, 12, 14, 16, 18, 21, 23, 25, 27, 28, 30, 32, 34, 36};
+    private int[] black = {2, 4, 6, 8, 10, 11, 13, 15, 17, 19, 20, 24, 22, 26, 29, 31, 33, 35};
+    private int green = 0;
+
+    public int rouletteWheel(){
+        roundOver = false;
+        //placing the timer
+        Thread timer = new Thread(() -> {
+            try{
+                Thread.sleep(30000); //timer for 1 minute
+
+                //when the timer is up it will make the roundOver is
+                roundOver = true;
+            }
+            catch (InterruptedException e){
+                System.err.println("Timer was Interrupted");
+            }
+        });
+
+        timer.start();
+
+        //while the timer is still going. it will return a number
+        int number = 0;
+        while (!roundOver){
+            //prints the number
+            System.out.println(number);
+            number++;
+
+            //if the number is 37, return number to 0
+            if(number == 37){
+                number = 0;
+            }
+
+            //adding a small sleep
+            try{
+                Thread.sleep(100);
+            }
+            catch (InterruptedException e){
+                //nothing happens
+            }
+        }
+
+        //making a random number that will determine the final winning number
+        Random rand = new Random();
+        int winning_Number = rand.nextInt(36);
+
+        //looping until the number is winning number
+        for(int i = number; i != winning_Number; i++){
+            //if number is 37 then reset the number
+            System.out.println(i);
+            if (i == 37){
+                i = 0;
+            }
+        }
+
+        return winning_Number;
     }
 }
