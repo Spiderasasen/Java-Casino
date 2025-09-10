@@ -72,9 +72,10 @@ public class Roulette {
     public void game(){
         //setting the bets of the loop
         ArrayList<Object> bets = new ArrayList<Object>();
-//        bets = place_bets();
+        bets = place_bets();
         int winning_number = rouletteWheel();
         System.out.println("Winning Number: " + winning_number);
+        System.out.println(isWinner(bets, winning_number));
     }
 
     //ensures all changes are visible across all threads
@@ -105,7 +106,7 @@ public class Roulette {
             System.out.println("3 6 9 12 15 18 21 24 27 30 33 36\n" +
                     "2 5 8 11 14 17 20 23 26 29 32 35\n" +
                     "1 4 7 10 13 16 19 22 25 28 31 34\n" +
-                    "         Red      Back          \n" +
+                    "         Red       Black         \n" +
                     "             Done                 ");
             //getting the selection
             String betSelection = scan.nextLine();
@@ -174,9 +175,8 @@ public class Roulette {
     //setting the numbers on the roullet table
     private int[] red = {1, 3, 5, 7, 9, 12, 14, 16, 18, 21, 23, 25, 27, 28, 30, 32, 34, 36};
     private int[] black = {2, 4, 6, 8, 10, 11, 13, 15, 17, 19, 20, 24, 22, 26, 29, 31, 33, 35};
-    private int green = 0;
 
-    public int rouletteWheel(){
+    private int rouletteWheel(){
         roundOver = false;
         //placing the timer
         Thread timer = new Thread(() -> {
@@ -228,5 +228,41 @@ public class Roulette {
         }
 
         return winning_Number;
+    }
+
+    private boolean isWinner(ArrayList<Object> bets, int winningNumber){
+        //checking if the user got red or black as a bet
+        if(bets.contains("Red")) { //for red
+            //looping through all the numbers in red and seeing if the winning number is in this table
+            for(int num : red){
+                if(num == winningNumber){
+                    return true;
+                }
+            }
+        }
+        else if(bets.contains("Black")){ //for black
+            //looping through all the numbers in black to see if the winning number is in the table
+            for(int num : black){
+                if(num == winningNumber){
+                    return true;
+                }
+            }
+        }
+        else{ //contains numbers
+            //loops through all the numbers in the bets array list
+            for(Object num : bets){
+                //checks if it is a integer number
+                if (num instanceof Integer){
+                    int number = (Integer) num;
+                    //checks if number is a winning number
+                    if(number == winningNumber){
+                        return true;
+                    }
+                }
+            }
+        }
+
+        //if both strings and ints don't have a winning number, then return false
+        return false;
     }
 }
