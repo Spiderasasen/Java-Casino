@@ -21,12 +21,13 @@ public class Roulette {
     public Roulette(){this.money = 10000;}
 
     //main game interface
-    public void mainGame(){
+    public void mainGame(Money money){
         boolean weLooping = true;
         while(weLooping){
             //checking that the player does not enter a differnt number
             try{
                 System.out.println("Roulette\n" +
+                        "Your Money: " + money.getMoney() +"\n" +
                         "1. Play\n" +
                         "2. How to Play\n" +
                         "3. Exit");
@@ -35,7 +36,8 @@ public class Roulette {
                 //checking what the user input
                 switch(choice){
                     case 1:
-                        game();
+                        int value = 0;
+                        money.setMoney(game(money));
                         break;
                     case 2:
                         System.out.println("The Dealer spins the Roulette Wheel in one direction and a small ball in the opposite direction. \nBets may be placed until the Dealer announces “No More Bets.” \nWhen the ball comes to rest in one of the pockets of the Roulette Wheel, the Dealer will announce the winning number and Place a marker on the winning number. \n" +
@@ -69,13 +71,37 @@ public class Roulette {
     }
 
     //calling the games section of the game
-    public void game(){
+    public int game(Money bet){
+        //asking the player how much they want to enter
+        int money = bet.howMuchBet();
+
         //setting the bets of the loop
         ArrayList<Object> bets = new ArrayList<Object>();
         bets = place_bets();
+        int winnings = 0;
         int winning_number = rouletteWheel();
         System.out.println("Winning Number: " + winning_number);
-        System.out.println(isWinner(bets, winning_number));
+        if(isWinner(bets, winning_number)){
+            if(bets.contains("Red") || bets.contains("Black")){
+                System.out.println("You Won!!!");
+                winnings += (money * 2);
+            }
+            else{
+                System.out.println("You Won!!!");
+                winnings += money;
+            }
+        }
+        else{
+            if(bets.contains("Red") || bets.contains("Black")){
+                System.out.println("You Lose!!!");
+                winnings -= (money * 2);
+            }
+            else{
+                System.out.println("You Lose!!!");
+                winnings -= money;
+            }
+        }
+        return winnings;
     }
 
     //ensures all changes are visible across all threads
@@ -101,6 +127,10 @@ public class Roulette {
             }
         });
 
+        //safety check
+        //switch round over to false
+        roundOver = false;
+
         //checking the round is not over
         while (!roundOver){
             System.out.println("3 6 9 12 15 18 21 24 27 30 33 36\n" +
@@ -114,7 +144,8 @@ public class Roulette {
             //checking if the input is a number
             try{
                 //if user selects a number, then it returns the number
-                if(1 <= Integer.parseInt(betSelection) && Integer.parseInt(betSelection) <= 36){
+                int numberBet = Integer.parseInt(betSelection);
+                if(numberBet >= 1 && numberBet <= 36){
                     bets.add(Integer.parseInt(betSelection));
                     if(anyRepeats(bets)){
                         System.out.println("Please enter a unique number");
@@ -131,16 +162,21 @@ public class Roulette {
                 if(betSelection.equalsIgnoreCase("red")){
                     bets.add("Red");
                     roundOver = true;
+                    timer.interrupt();
                 }
 
                 //if the user selected a number in black
                 else if(betSelection.equalsIgnoreCase("black")){
                     bets.add("Black");
                     roundOver = true;
+                    timer.interrupt();
                 }
 
                 //if the choise is done
-                else if(betSelection.equalsIgnoreCase("done")){roundOver = true;}
+                else if(betSelection.equalsIgnoreCase("done")){
+                    roundOver = true;
+                    timer.interrupt();
+                }
 
                 //if the choise was not one of these options then we tell the user to go again
                 else{
@@ -181,7 +217,7 @@ public class Roulette {
         //placing the timer
         Thread timer = new Thread(() -> {
             try{
-                Thread.sleep(30000); //timer for 1 minute
+                Thread.sleep(30000); //timer for 30 sec
 
                 //when the timer is up it will make the roundOver is
                 roundOver = true;

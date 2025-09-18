@@ -1,6 +1,10 @@
 package Games.Util;
+import java.util.Scanner;
 
 public class Money {
+    //calling the scanner
+    Scanner betScan = new Scanner(System.in);
+
     //private vars
     private int money;
 
@@ -27,6 +31,20 @@ public class Money {
             else if (money < 0){
                 this.money += money;
             }
+        }
+    }
+
+    //seeing how much people can bet
+    public int howMuchBet(){
+        System.out.println("How much do you want to bet?");
+        int bet = betScan.nextInt();
+
+        if(money <= 0){
+            System.out.println("You Can't bet anymore");
+            return -1;
+        }
+        else{
+            return bet;
         }
     }
 

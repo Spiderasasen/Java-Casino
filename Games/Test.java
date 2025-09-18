@@ -11,8 +11,10 @@ public class Test {
         //testing area
 //        test1.mainBlackjack(); //all the test will come in here. it just depends on what tf you are going to do with it
 //        test1.game();
-//        test2.mainGame();
-        test2.game();
+        test2.mainGame(moneyTest);
+//        test2.game(moneyTest);
+//        test2.game(moneyTest);
+//        test2.game(moneyTest);
 
     }
 }
