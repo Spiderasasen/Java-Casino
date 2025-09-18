@@ -18,17 +18,8 @@ public class BlackJack {
     //calling a private var that states the money
     private int money;
 
-    //making the constructor
-    public BlackJack(Money sharedMoney){
-        this.money = sharedMoney.getMoney();
-    }
-
-    public BlackJack(){
-        money = 10000;
-    }
-
     //main void for blackjack
-    public void mainBlackjack() {
+    public void mainBlackjack(Money money) {
         //condition to make loop continue
         boolean weLooping = true;
 
@@ -37,7 +28,8 @@ public class BlackJack {
             //checking if all the inputs are good
             try{
                 //asking the user what they want to do
-                System.out.println("Blackjack");
+                System.out.println("Blackjack\n");
+                money.printMoney();
                 System.out.println("1. Play\n" +
                         "2. How to Play\n" +
                         "3. Exit");
@@ -47,7 +39,7 @@ public class BlackJack {
                 switch (choice){
                     case 1:
                         screen.clean();
-                        game();
+                        money.setMoney(game(money));
                         break;
                     case 2:
                         System.out.println("Players receive all cards face up, and the dealer's first card is face up and the second is face down. \nThe object of the game is to get closer to 21 than the dealer without going over 21. \nIf a hand goes over 21, it is called a “bust” or “break,” and the wager is lost. \nIn Blackjack, Jacks, Queens, Kings, and 10s count as 10.");
@@ -80,7 +72,10 @@ public class BlackJack {
 
     /*only public for testing only the game
     * this is where all the functions go in*/
-    public void game(){
+    public int game(Money bet){
+        //getting the bet
+        int betMade = bet.howMuchBet();
+
         //making the list for both items
         ArrayList<Object> botCards = new ArrayList<Object>();
         ArrayList<Object> playerCards = new ArrayList<Object>();
@@ -99,8 +94,13 @@ public class BlackJack {
 
         boolean weLooping = true;
 
+        //checking the winnings
+        int winnings = 0;
+
         //while loop how long the game will last
         while (weLooping){
+            int numTurns = 0;
+
             //checking if the user did not just enter a letter
             try{
                 //printing out the numbers
@@ -111,16 +111,25 @@ public class BlackJack {
                 playerCardCount = totalCards(playerCards);
                 System.out.println("Total Card Value: " + playerCardCount);
 
-                //if the player already got 21, then we dont have to do anything else
+                //if the player got 21 in the first turn, then we dont have to do anything else
+                if(is21(playerCardCount) && numTurns == 0){
+                    System.out.println("BLACKJACK!!!\n" +
+                            "YOU WIN!!!!!");
+                    winnings += (betMade * 2);
+                }
+
+                //if the player got 21
                 if(is21(playerCardCount)){
                     System.out.println("You Win!!!");
-                    break;
+                    winnings += betMade;
+                    return winnings;
                 }
 
                 //checking if the player did not go over 21
                 if(over21(playerCardCount)){
                     System.out.println("You Lost!!!");
-                    break;
+                    winnings -= betMade;
+                    return winnings;
                 }
 
                 //asking the user what else they want to do
@@ -130,11 +139,13 @@ public class BlackJack {
                 int choice = scan.nextInt();
                 switch (choice){
                     case 1:
+                        numTurns++;
                         playerCards.add(hittingCard());
                         screen.clean();
                         continue;
                     case 2: //once the player stands, we make the bot go next
                         screen.clean();
+                        numTurns = 0;
                         weLooping = false;
 
                         //looping through the bot, if the bot has a 16 or lower, he has to hit
@@ -152,20 +163,33 @@ public class BlackJack {
 
                             //if the bot is over the 16 min amount
                             if(botCardCount > 16){
+                                //checking if the bot got 21 on the first turn
+                                if(is21(botCardCount) && numTurns == 0){
+                                    System.out.println("BLACKJACK!!!!\n" +
+                                            "YOU LOST!!!!!");
+                                    winnings -= (betMade * 2);
+                                }
                                 //checking if the bot lost
                                 if (over21(botCardCount)){
                                     System.out.println("You Win!!!");
+                                    winnings += betMade;
                                 }
                                 //checking who won
                                 else if(botCardCount > playerCardCount){
                                     System.out.println("You Lost!!!");
+                                    winnings -= betMade;
                                 }
                                 else{
                                     System.out.println("You Win!!!");
+                                    winnings += betMade;
                                 }
+                                enter.press();
+                                screen.clean();
+                                return winnings;
                             }
                             enter.press();
                             screen.clean();
+                            numTurns++;
                         }
                         break;
                     default:
@@ -187,7 +211,7 @@ public class BlackJack {
                 System.exit(0);
             }
         }
-
+        return -1;
     }
 
     private String prettyPrintCard(int card){

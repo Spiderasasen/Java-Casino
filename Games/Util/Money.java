@@ -48,6 +48,11 @@ public class Money {
         }
     }
 
+    //just printing your money value
+    public void printMoney(){
+        System.out.println("Your Money: " + getMoney());
+    }
+
     //gets you the money ammount
     public int getMoney() {
         return this.money;

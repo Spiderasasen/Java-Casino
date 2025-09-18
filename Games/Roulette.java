@@ -13,22 +13,15 @@ public class Roulette {
     Cleaning screen = new Cleaning();
     press_enter enter = new press_enter();
 
-    //making a constructor
-    private int money;
-
-    public Roulette(Money money){this.money = money.getMoney();}
-
-    public Roulette(){this.money = 10000;}
-
     //main game interface
     public void mainGame(Money money){
         boolean weLooping = true;
         while(weLooping){
             //checking that the player does not enter a differnt number
             try{
-                System.out.println("Roulette\n" +
-                        "Your Money: " + money.getMoney() +"\n" +
-                        "1. Play\n" +
+                System.out.println("Roulette\n");
+                money.printMoney();
+                System.out.println("1. Play\n" +
                         "2. How to Play\n" +
                         "3. Exit");
                 int choice = scan.nextInt(); //this is why the try catch statment is here
@@ -36,6 +29,7 @@ public class Roulette {
                 //checking what the user input
                 switch(choice){
                     case 1:
+                        screen.clean();
                         int value = 0;
                         money.setMoney(game(money));
                         break;
@@ -74,11 +68,13 @@ public class Roulette {
     public int game(Money bet){
         //asking the player how much they want to enter
         int money = bet.howMuchBet();
+        screen.clean();
 
         //setting the bets of the loop
         ArrayList<Object> bets = new ArrayList<Object>();
         bets = place_bets();
         int winnings = 0;
+        screen.clean();
         int winning_number = rouletteWheel();
         System.out.println("Winning Number: " + winning_number);
         if(isWinner(bets, winning_number)){
@@ -101,6 +97,8 @@ public class Roulette {
                 winnings -= money;
             }
         }
+        enter.press();
+        screen.clean();
         return winnings;
     }
 

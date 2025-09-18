@@ -16,13 +16,14 @@ public class Main {
         Cleaning screen = new Cleaning();
         press_enter enter = new press_enter();
         BlackJack blackjack = new BlackJack();
+        Roulette roulette = new Roulette();
 
         while(true){
             //checking if the input is an integer
             try {
                 //printing the main title
                 System.out.println("̲\uD835\uDE79̲\uD835\uDE8A̲\uD835\uDE9F̲\uD835\uDE8A ̲\uD835\uDE72̲\uD835\uDE8A̲\uD835\uDE9C̲\uD835\uDE92̲\uD835\uDE97̲\uD835\uDE98");
-
+                money.printMoney();
                 //placing the 2 items and asking the user to make a selection
                 System.out.println("1. Play\n" +
                         "2. Exit\n" +
@@ -45,10 +46,11 @@ public class Main {
                         switch (choice){
                             case 1:
                                 screen.clean();
-                                blackjack.mainBlackjack();
+                                blackjack.mainBlackjack(money);
                                 break;
                             case 2:
-                                System.out.println("Play roulette");
+                                screen.clean();
+                                roulette.mainGame(money);
                                 break;
                             case 3:
                                 System.out.println("play slots");
